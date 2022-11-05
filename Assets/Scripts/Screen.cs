@@ -1,10 +1,14 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Screen : MonoBehaviour
 {
+    private float rightclick;
+
     [SerializeField] private GameObject Desktop;
+
 
     private void Start()
     {

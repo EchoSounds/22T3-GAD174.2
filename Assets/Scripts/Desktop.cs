@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Cinemachine;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 
 public class Desktop : MonoBehaviour
 {
+    
+
     public GameObject CurrentApplication = null;
     [SerializeField]
     private GameObject WindowOutline;
@@ -20,10 +24,13 @@ public class Desktop : MonoBehaviour
     [SerializeField] //Open Windows
     private List<GameObject> ActiveWindows = new List<GameObject>(1);
 
+
     private void Start()
     {
         CloseWindow();
     }
+
+
 
     public void OpenWindow()
     {
