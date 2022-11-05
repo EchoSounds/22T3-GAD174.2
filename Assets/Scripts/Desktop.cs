@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class Desktop : MonoBehaviour
 {
@@ -11,31 +12,26 @@ public class Desktop : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI ApplicationTitle;
 
-    [SerializeField]
+    [SerializeField] //Available Windows
     private List<GameObject> ApplicationWindows = new List<GameObject>();
-    [SerializeField]
+    [SerializeField] //Available Tabs
     private List<GameObject> ApplicationTabs = new List<GameObject>();
 
-    [SerializeField]
-    private List<GameObject> ActiveWindows = new List<GameObject>();
+    [SerializeField] //Open Windows
+    private List<GameObject> ActiveWindows = new List<GameObject>(1);
 
     private void Start()
     {
         CloseWindow();
     }
-    public void OpenWindow(string ApplicationName)
+
+    public void OpenWindow()
     {
         if (WindowOutline.activeSelf == false)
         {
             WindowOutline.SetActive(true);
-            OpenApplication(ApplicationName);
-
-        } else
-        {
-            OpenApplication(ApplicationName);
         }
     }
-
     public void CloseWindow()
     {
         if (WindowOutline.activeSelf == true)
@@ -45,23 +41,21 @@ public class Desktop : MonoBehaviour
             {
                 Application.SetActive(false);
             }
-            foreach (GameObject Application in ActiveWindows)
-            {
-                Application.SetActive(true);
-            }
-        }
-        else
-        {
-            return;
+
         }
     }
+    public void HideWindow()
+    {
+        CloseWindow();
+    }
+
     private void HeaderUpdate(GameObject Application, bool Add)
     {
         ApplicationTitle.text = Application.name;
 
-        foreach (GameObject ActiveApplication in ApplicationTabs)
+        foreach (GameObject ActiveTab in ApplicationTabs)
         {
-            ActiveApplication.SetActive(false);
+            ActiveTab.SetActive(false);
         }
         
         if (!ActiveWindows.Contains(Application))
@@ -75,10 +69,20 @@ public class Desktop : MonoBehaviour
            ActiveWindows.Remove(Application);
         }
         
-
-        foreach (GameObject ActiveApplication in ActiveWindows)
+        foreach (GameObject ActiveWindow in ActiveWindows)
         {
-            ActiveApplication.SetActive(true);
+            foreach (GameObject ActiveApplication in ApplicationTabs)
+            {
+                if (ActiveWindow.name == ActiveApplication.name)
+                {
+                    ActiveApplication.SetActive(true);
+                }
+            }
+
+            if (ActiveWindow.name == Application.name)
+            {
+                ActiveWindow.SetActive(true);
+            }
         }
     }
 
@@ -92,13 +96,21 @@ public class Desktop : MonoBehaviour
             return;
         } else
         {
-            if (CurrentApplication != null && CurrentApplication.name == ApplicationName)
+            OpenWindow();
+            if (CurrentApplication != null)
             {
-                CurrentApplication.SetActive(false);
+                if (CurrentApplication.name == ApplicationName)
+                {
+                    CurrentApplication.SetActive(true);
+                    ApplicationTitle.text = CurrentApplication.name;
+                } else
+                {
+                    CurrentApplication.SetActive(false);
+                    
+                }
             }
             foreach (GameObject Application in ApplicationWindows)
             {
-                
                 if (Application.name == ApplicationName)
                 {
                     CurrentApplication = Application;
@@ -106,32 +118,48 @@ public class Desktop : MonoBehaviour
                     HeaderUpdate(Application, true);
 
                     CurrentApplication.SetActive(true);
-                    return;
                 }
             } 
         }
     }
 
-    public void CloseApplication(string ApplicationName)
+    public void CloseApplication()
     {
-        foreach (GameObject Application in ApplicationWindows)
-        {
-            if (Application.name == ApplicationName)
-            {
-                Application.SetActive(false);
-                ActiveWindows.Remove(Application);
-                HeaderUpdate(Application, false);
+        HeaderUpdate(CurrentApplication, false);
 
-                if (ActiveWindows[0] != null)
-                {
-                    ActiveWindows[0].SetActive(true);
-                } else
-                {
-                    CloseWindow();
-                }
-                return;
-            }
+        CurrentApplication.SetActive(false);
+
+        if (ActiveWindows.Count == 0)
+        {
+            Debug.Log("pog");
+            CloseWindow();
+        } else if (ActiveWindows.Count != 0)
+        {
+            Debug.Log("poggers");
+            OpenApplication(ActiveWindows[0].name);
         }
+
+        //foreach (GameObject Application in ApplicationWindows)
+        //{
+        //    if (Application.name == ApplicationName)
+        //    {
+        //        Application.SetActive(false);
+        //        ActiveWindows.Remove(Application);
+        //        HeaderUpdate(Application, false);
+
+        //        if (ActiveWindows[0] != null)
+        //        {
+        //            ActiveWindows[0].SetActive(true);
+        //        } else
+        //        {
+        //            CloseWindow();
+        //        }
+        //        return;
+        //    } else if (ApplicationName == null)
+        //    {
+
+        //    }
+        //}
 
     }
 }
