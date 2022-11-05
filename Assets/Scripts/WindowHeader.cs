@@ -28,6 +28,9 @@ public class WindowHeader : MonoBehaviour
         } else if (Screen.renderMode == RenderMode.ScreenSpaceOverlay)
         {
             Screen.renderMode= RenderMode.WorldSpace;
+            Screen.transform.position = Pos;
+            Screen.transform.localScale = Scale;
+            Screen.transform.rotation = Rotation;
         }
     }
 
