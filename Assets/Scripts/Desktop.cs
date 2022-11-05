@@ -47,6 +47,7 @@ public class Desktop : MonoBehaviour
     public void HideWindow()
     {
         CloseWindow();
+        FindObjectOfType<AudioManager>().Play("Woosh");
     }
 
     private void HeaderUpdate(GameObject Application, bool Add)
@@ -102,7 +103,9 @@ public class Desktop : MonoBehaviour
                 if (CurrentApplication.name == ApplicationName)
                 {
                     CurrentApplication.SetActive(true);
+                    FindObjectOfType<AudioManager>().Play("HighBeep");
                     ApplicationTitle.text = CurrentApplication.name;
+                    return;
                 } else
                 {
                     CurrentApplication.SetActive(false);
@@ -118,9 +121,12 @@ public class Desktop : MonoBehaviour
                     HeaderUpdate(Application, true);
 
                     CurrentApplication.SetActive(true);
+                    FindObjectOfType<AudioManager>().Play("HighBeep");
                 }
             } 
         }
+
+        
     }
 
     public void CloseApplication()
@@ -138,6 +144,8 @@ public class Desktop : MonoBehaviour
             Debug.Log("poggers");
             OpenApplication(ActiveWindows[0].name);
         }
+
+        FindObjectOfType<AudioManager>().Play("LowBeep");
 
         //foreach (GameObject Application in ApplicationWindows)
         //{
